@@ -3,16 +3,21 @@ using System.Net;
 using Gmtq.Data.Models;
 using Gmtq.Parser.Models;
 using Gmtq.Parser.Services.Abstractions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Gmtq.Parser.Services;
 
 public class CurrencyApiService : ICurrencyApiService
 {
+    private readonly ILogger<CurrencyApiService> _logger;
     private readonly CurrencyApiConfig _config;
 
-    public CurrencyApiService(IOptions<CurrencyApiConfig> options)
+    public CurrencyApiService(
+        ILogger<CurrencyApiService> logger,
+        IOptions<CurrencyApiConfig> options)
     {
+        _logger = logger;
         _config = options.Value;
     }
 
@@ -24,19 +29,41 @@ public class CurrencyApiService : ICurrencyApiService
         var data = await httpClient.GetStringAsync(url, token);
         
         var lines = data.Split('\n');
+        var header = lines[0].Split('|');
+
+        var currCount = header.Length;
+        
+        var convertCurrencies = new (int Amount, string Name)[currCount];
+        for (var i = 1; i < currCount; i++)
+        {
+            var rateName = header[i].Split(' ');
+            convertCurrencies[i] = (int.Parse(rateName[0]), rateName[1]);
+        }
+        
         var currencies = new List<Currency>();
 
-        for (var i = 1; i < lines.Length; i++)
+        for (var i = 1; i < lines.Length - 1; i++)
         {
-            var fields = lines[i].Split('|');
-            var currency = new Currency
+            try
             {
-                Date = DateTime.ParseExact(fields[0], "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                Name = fields[1],
-                Amount = int.Parse(fields[2]),
-                Rate = decimal.Parse(fields[3], CultureInfo.InvariantCulture)
-            };
-            currencies.Add(currency);
+                var fields = lines[i].Split('|');
+                var date = DateTime.ParseExact(fields[0], "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                for (var j = 1; j < currCount; j++)
+                {
+                    var currency = new Currency
+                    {
+                        Date = date,
+                        Name = convertCurrencies[j].Name,
+                        Amount = convertCurrencies[j].Amount,
+                        Rate = decimal.Parse(fields[j], CultureInfo.InvariantCulture)
+                    };
+                    currencies.Add(currency);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured during parsing currencies. {Line}", lines[i]);
+            }
         }
 
         return currencies;

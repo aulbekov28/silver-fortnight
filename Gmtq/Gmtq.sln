@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gmtq.Data", "Gmtq.Data\Gmtq.Data.csproj", "{5D1FE57E-AC85-4B3B-9F18-F22F980FB571}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gmtq.Web", "Gmtq.Web\Gmtq.Web.csproj", "{A60DFC7C-CDFD-403E-A45B-3B1FB0EB7D95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,5 +25,9 @@ Global
 		{5D1FE57E-AC85-4B3B-9F18-F22F980FB571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D1FE57E-AC85-4B3B-9F18-F22F980FB571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D1FE57E-AC85-4B3B-9F18-F22F980FB571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A60DFC7C-CDFD-403E-A45B-3B1FB0EB7D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A60DFC7C-CDFD-403E-A45B-3B1FB0EB7D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A60DFC7C-CDFD-403E-A45B-3B1FB0EB7D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A60DFC7C-CDFD-403E-A45B-3B1FB0EB7D95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
