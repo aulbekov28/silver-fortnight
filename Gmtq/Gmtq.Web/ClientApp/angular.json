@@ -27,6 +27,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/theme.less",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
@@ -129,5 +130,8 @@
       }
     }
   },
-  "defaultProject": "Gmtq.Web"
+  "defaultProject": "Gmtq.Web",
+  "cli": {
+    "analytics": false
+  }
 }

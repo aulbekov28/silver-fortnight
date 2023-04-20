@@ -1,26 +1,51 @@
+using Gmtq.Data;
+using Gmtq.Web.Services;
+using Gmtq.Web.Services.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "TIDE API", Version = "v1" });
+});
+builder.Services.AddCors();
+
+builder.Services.AddDbContext<CurrencyContext>(optionActions =>
+    optionActions.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")!));
+
+builder.Services.AddScoped<ICurrencyRateService, CurrencyRateService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseCors(options =>
+    options.WithOrigins("https://localhost:44430")
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.MapFallbackToFile("index.html");
 

@@ -17,7 +17,7 @@ public class CurrencyRatesController : ControllerBase
         _currencyRateService = currencyRateService;
     }
 
-    [HttpGet]
+    [HttpGet("list")]
     [ProducesResponseType(typeof(IReadOnlyCollection<string>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetCurrencyRates(CancellationToken token)
     {

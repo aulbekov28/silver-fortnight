@@ -14,14 +14,18 @@ public class CurrencyRateService : ICurrencyRateService
     {
         _currencyContext = currencyContext;
     }
-    
+
+    private static readonly Func<CurrencyContext, string, DateTime, Task<Currency?>> GetCurrencyRateAsync =
+        EF.CompileAsyncQuery((CurrencyContext context, string currency, DateTime date) =>
+            context.Currencies
+                .AsNoTracking()
+                .Where(c => c.Name == currency && c.Date <= date)
+                .OrderByDescending(c => c.Date)
+                .FirstOrDefault());
+
     public async Task<Currency?> GetCurrencyRate(string currency, DateTime date, CancellationToken token)
     {
-        var currencyRate = await _currencyContext.Currencies
-            .AsNoTracking()
-            .Where(c => c.Name == currency && c.Date <= date)
-            .OrderByDescending(c => c.Date)
-            .FirstOrDefaultAsync(token);
+        var currencyRate = await GetCurrencyRateAsync(_currencyContext, currency, date);
         
         return currencyRate;
     }
