@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Gmtq.Data;
+﻿using Gmtq.Data;
 using Gmtq.Data.Models;
 using Gmtq.Parser.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Gmtq.Data.Models;
+﻿namespace Gmtq.Data.Models;
 
 public class Currency
 {
